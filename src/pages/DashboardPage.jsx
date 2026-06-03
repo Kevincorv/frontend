@@ -5,6 +5,8 @@ import {
   ArrowRightLeft,
   DollarSign,
   TrendingUp,
+  ShoppingCart,
+  CreditCard,
 } from 'lucide-react'
 import { getSummary, getLowStock, getRecentMovements, getChartData } from '../services/dashboardService'
 import { formatCurrency, formatDate, getStatusColor, getStatusText, formatNumber } from '../utils/format'
@@ -34,22 +36,17 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const load = async () => {
-      try {
-        const [sum, ls, rm, cd] = await Promise.all([
-          getSummary(),
-          getLowStock(),
-          getRecentMovements(),
-          getChartData(),
-        ])
-        setSummary(sum)
-        setLowStock(Array.isArray(ls?.products || ls?.data || ls) ? (ls.products || ls.data || ls) : [])
-        setRecentMovements(Array.isArray(rm?.movements || rm?.data || rm) ? (rm.movements || rm.data || rm) : [])
-        setChartData(cd)
-      } catch (err) {
-        console.error('Dashboard error:', err)
-      } finally {
-        setLoading(false)
-      }
+      const [sum, ls, rm, cd] = await Promise.all([
+        getSummary().catch(e => { console.error('Summary error:', e); return null }),
+        getLowStock().catch(e => { console.error('LowStock error:', e); return null }),
+        getRecentMovements().catch(e => { console.error('Movements error:', e); return null }),
+        getChartData().catch(e => { console.error('ChartData error:', e); return null }),
+      ])
+      if (sum) setSummary(sum)
+      if (ls) setLowStock(Array.isArray(ls?.products || ls?.data || ls) ? (ls.products || ls.data || ls) : [])
+      if (rm) setRecentMovements(Array.isArray(rm?.movements || rm?.data || rm) ? (rm.movements || rm.data || rm) : [])
+      if (cd) setChartData(cd)
+      setLoading(false)
     }
     load()
   }, [])
@@ -113,7 +110,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <StatCard
+          title="Ventas de Hoy"
+          value={formatNumber(summary?.todaySalesCount || 0)}
+          icon={ShoppingCart}
+          color="primary"
+        />
+        <StatCard
+          title="Ingresos de Hoy"
+          value={formatCurrency(summary?.todaySalesAmount || 0)}
+          icon={DollarSign}
+          color="green"
+        />
         <StatCard
           title="Total Productos"
           value={formatNumber(summary?.totalProducts || 0)}
@@ -135,8 +144,8 @@ export default function DashboardPage() {
         <StatCard
           title="Valor Inventario"
           value={formatCurrency(summary?.inventoryValue || 0)}
-          icon={DollarSign}
-          color="green"
+          icon={CreditCard}
+          color="purple"
         />
       </div>
 

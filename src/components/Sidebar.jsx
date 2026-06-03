@@ -15,6 +15,7 @@ import {
   Settings,
   Activity,
   X,
+  DollarSign,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useSidebar } from '../contexts/SidebarContext'
@@ -27,6 +28,7 @@ const navigationItems = [
   { to: '/clients', label: 'Clientes', icon: Users },
   { to: '/purchases', label: 'Compras', icon: ShoppingCart },
   { to: '/sales', label: 'Ventas', icon: Receipt },
+  { to: '/caja', label: 'Caja', icon: DollarSign },
   { to: '/inventory', label: 'Inventario', icon: Warehouse },
   { to: '/users', label: 'Usuarios', icon: UserCog, adminOnly: true },
   { to: '/branches', label: 'Sucursales', icon: Building2, adminOnly: true },

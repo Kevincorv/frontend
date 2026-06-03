@@ -16,7 +16,8 @@ export default function ProtectedRoute({ children, roles }) {
     return <Navigate to="/login" replace />
   }
 
-  if (roles && !roles.includes(user.rol)) {
+  const userRole = (user.role || user.rol || '').toLowerCase()
+  if (roles && !roles.some((r) => r.toLowerCase() === userRole)) {
     return <Navigate to="/dashboard" replace />
   }
 

@@ -14,7 +14,7 @@ import ProductSelect from '../components/ProductSelect'
 export default function SalesPage() {
   const [sales, setSales] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filters, setFilters] = useState({ search: '', clientId: '', estado: '', fecha_desde: '', fecha_hasta: '' })
+  const [filters, setFilters] = useState({ search: '', clientId: '', status: '', fecha_desde: '', fecha_hasta: '' })
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [modalOpen, setModalOpen] = useState(false)
@@ -32,7 +32,7 @@ export default function SalesPage() {
       const params = { page, limit: 10 }
       if (filters.search) params.search = filters.search
       if (filters.clientId) params.clientId = filters.clientId
-      if (filters.estado) params.estado = filters.estado
+      if (filters.status) params.status = filters.status
       if (filters.fecha_desde) params.fecha_desde = filters.fecha_desde
       if (filters.fecha_hasta) params.fecha_hasta = filters.fecha_hasta
       const data = await getSales(params)
@@ -159,11 +159,11 @@ export default function SalesPage() {
             <option value="">Todos los clientes</option>
             {clients.map((c) => <option key={c.id || c._id} value={c.id || c._id}>{c.name}</option>)}
           </select>
-          <select value={filters.estado} onChange={(e) => { setFilters({...filters, estado: e.target.value}); setPage(1) }} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2">
+          <select value={filters.status} onChange={(e) => { setFilters({...filters, status: e.target.value}); setPage(1) }} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2">
             <option value="">Todos los estados</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="completado">Completado</option>
-            <option value="cancelado">Cancelado</option>
+            <option value="COMPLETED">Completado</option>
+            <option value="PENDING">Pendiente</option>
+            <option value="CANCELLED">Cancelado</option>
           </select>
           <input type="date" value={filters.fecha_desde} onChange={(e) => setFilters({...filters, fecha_desde: e.target.value})} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2" />
           <input type="date" value={filters.fecha_hasta} onChange={(e) => setFilters({...filters, fecha_hasta: e.target.value})} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2" />

@@ -21,6 +21,7 @@ import ReportsPage from './pages/ReportsPage'
 import NotificationsPage from './pages/NotificationsPage'
 import CompanyPage from './pages/CompanyPage'
 import ActivityLogsPage from './pages/ActivityLogsPage'
+import CajaPage from './pages/CajaPage'
 
 export default function App() {
   return (
@@ -78,6 +79,7 @@ export default function App() {
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/company" element={<CompanyPage />} />
                 <Route path="/activity-logs" element={<ActivityLogsPage />} />
+                <Route path="/caja" element={<CajaPage />} />
               </Route>
 
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
