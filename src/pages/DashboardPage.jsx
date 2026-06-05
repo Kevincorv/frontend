@@ -135,8 +135,8 @@ export default function DashboardPage() {
           color="primary"
         />
         <StatCard
-          title="Ingresos de Hoy"
-          value={formatCurrency(summary?.todaySalesAmount || 0)}
+          title="Ingresos últimos 30 días"
+          value={formatCurrency(summary?.last30DaysAmount || 0)}
           icon={DollarSign}
           color="green"
         />
@@ -147,14 +147,14 @@ export default function DashboardPage() {
           color="primary"
         />
         <StatCard
-          title="Movimientos Hoy"
-          value={formatNumber(summary?.todayMovements || 0)}
+          title="Ingresos del día"
+          value={formatCurrency(summary?.todaySalesAmount || 0)}
           icon={ArrowRightLeft}
           color="blue"
         />
         <StatCard
-          title="Valor Inventario"
-          value={formatCurrency(summary?.inventoryValue || 0)}
+          title="Productos vendidos hoy"
+          value={formatNumber(summary?.todayProductsSold || 0)}
           icon={CreditCard}
           color="purple"
         />
