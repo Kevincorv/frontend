@@ -43,7 +43,7 @@ export default function Sidebar() {
   const { sidebarOpen, toggleSidebar } = useSidebar()
 
   const filteredItems = navigationItems.filter((item) => {
-    if (item.adminOnly && user?.rol !== 'admin') return false
+    if (item.adminOnly && (user?.role || user?.rol) !== 'admin') return false
     return true
   })
 

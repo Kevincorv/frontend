@@ -117,10 +117,10 @@ export default function Navbar() {
             </div>
             <div className="hidden md:block text-left">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
-                {user?.nombre || 'Usuario'}
+                {user?.fullName || user?.nombre || user?.name || 'Usuario'}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">
-                {user?.rol || ''}
+                {user?.role || user?.rol || ''}
               </p>
             </div>
             <ChevronDown className="h-4 w-4 text-slate-400 hidden md:block" />
