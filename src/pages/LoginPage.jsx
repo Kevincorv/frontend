@@ -56,7 +56,7 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-md relative animate-slide-up">
-        <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 sm:p-10 border border-white/20 dark:border-slate-700/50">
+        <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-white/20 dark:border-slate-700/50">
           <div className="flex flex-col items-center mb-8">
             <div className="p-4 rounded-2xl bg-gradient-to-br from-primary-500 to-blue-600 shadow-lg shadow-primary-500/25 mb-5">
               <Package className="h-8 w-8 text-white" />

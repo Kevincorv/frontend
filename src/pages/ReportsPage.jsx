@@ -313,7 +313,7 @@ function DailyReport() {
               </button>
               {expandedDay === day.date && (
                 <div className="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-4 py-3">
-                  <table className="w-full text-sm">
+                  <div className="overflow-x-auto"><table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-slate-200 dark:border-slate-700">
                         <th className="text-left px-3 py-1.5 text-xs font-semibold text-slate-500">Producto</th>
@@ -330,7 +330,7 @@ function DailyReport() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
               )}
             </div>

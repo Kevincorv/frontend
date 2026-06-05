@@ -220,7 +220,7 @@ export default function ProductsPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Precio de Venta</label>
-            <input type="number" step="0.01" min="0" value={form.salePrice} onChange={(e) => setForm({...form, salePrice: e.target.value})} className="input-field" />
+            <input type="number" step="0.01" min="0" inputMode="decimal" value={form.salePrice} onChange={(e) => setForm({...form, salePrice: e.target.value})} className="input-field" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={() => setModalOpen(false)} className="btn-secondary">Cancelar</button>

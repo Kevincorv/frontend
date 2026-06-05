@@ -23,7 +23,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
       <p className="text-sm text-slate-500 dark:text-slate-400">
         Página {page} de {totalPages}
       </p>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 overflow-x-auto">
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}

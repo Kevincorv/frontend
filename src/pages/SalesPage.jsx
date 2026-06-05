@@ -187,7 +187,7 @@ export default function SalesPage() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1 w-full flex-wrap">
-          <div className="relative flex-1 min-w-[200px] max-w-xs">
+          <div className="relative flex-1 min-w-[140px] max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input type="text" value={searchInput} onChange={handleSearchChange} placeholder="Buscar..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
           </div>
@@ -246,7 +246,7 @@ export default function SalesPage() {
                         <input type="number" min="1" value={item.quantity} onChange={(e) => updateItem(i, 'quantity', Number(e.target.value))} className="w-20 mx-auto text-center text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 px-2 py-1" />
                       </td>
                       <td className="px-3 py-2">
-                        <input type="number" step="0.01" min="0" value={item.unitPrice} onChange={(e) => updateItem(i, 'unitPrice', Number(e.target.value))} className="w-28 ml-auto text-right text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 px-2 py-1" />
+                        <input type="number" step="0.01" min="0" inputMode="decimal" value={item.unitPrice} onChange={(e) => updateItem(i, 'unitPrice', Number(e.target.value))} className="w-28 ml-auto text-right text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 px-2 py-1" />
                       </td>
                       <td className="px-3 py-2 text-right text-slate-700 dark:text-slate-300 font-medium">
                         {formatCurrency((item.quantity || 0) * (item.unitPrice || 0))}
@@ -281,7 +281,7 @@ export default function SalesPage() {
       <Modal isOpen={detailModalOpen} onClose={() => setDetailModalOpen(false)} title={`Detalle de Venta - ${detailData?.comprobante || detailData?.numero || ''}`} size="lg">
         {detailData ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div><span className="text-slate-500">Cliente:</span> <span className="text-slate-900 dark:text-slate-100 font-medium">{detailData.client?.name || detailData.client_name || 'General'}</span></div>
               <div><span className="text-slate-500">Fecha:</span> <span className="text-slate-900 dark:text-slate-100">{formatDate(detailData.createdAt)}</span></div>
               <div><span className="text-slate-500">Estado:</span> <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusColor(detailData.status)}`}>{getStatusText(detailData.status)}</span></div>
