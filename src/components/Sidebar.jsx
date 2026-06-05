@@ -2,38 +2,52 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Package,
+  Tags,
+  Truck,
+  Users,
+  ShoppingCart,
   Receipt,
-  DollarSign,
+  Warehouse,
   UserCog,
   Building2,
   BarChart3,
+  Bell,
+  Settings,
+  Activity,
   X,
-  ChevronDown,
+  DollarSign,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useSidebar } from '../contexts/SidebarContext'
-import { useState } from 'react'
 
-const mainItems = [
+const navigationItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/products', label: 'Productos', icon: Package },
+  { to: '/categories', label: 'Categorías', icon: Tags },
+  { to: '/suppliers', label: 'Proveedores', icon: Truck },
+  { to: '/clients', label: 'Clientes', icon: Users },
+  { to: '/purchases', label: 'Compras', icon: ShoppingCart },
   { to: '/sales', label: 'Ventas', icon: Receipt },
   { to: '/caja', label: 'Caja', icon: DollarSign },
+  { to: '/inventory', label: 'Inventario', icon: Warehouse },
+  { to: '/users', label: 'Usuarios', icon: UserCog, adminOnly: true },
+  { to: '/branches', label: 'Sucursales', icon: Building2, adminOnly: true },
   { to: '/reports', label: 'Reportes', icon: BarChart3 },
-]
-
-const adminItems = [
-  { to: '/users', label: 'Usuarios', icon: UserCog },
-  { to: '/branches', label: 'Sucursales', icon: Building2 },
+  { to: '/notifications', label: 'Notificaciones', icon: Bell },
+  { to: '/company', label: 'Configuración', icon: Settings },
+  { to: '/activity-logs', label: 'Actividad', icon: Activity },
 ]
 
 export default function Sidebar() {
   const { user } = useAuth()
   const { sidebarOpen, toggleSidebar } = useSidebar()
   const location = useLocation()
-  const [adminOpen, setAdminOpen] = useState(true)
 
-  const isAdmin = (user?.role || user?.rol) === 'admin'
+  const filteredItems = navigationItems.filter((item) => {
+    if (item.adminOnly && (user?.role || user?.rol) !== 'admin') return false
+    return true
+  })
+
   const isActive = (path) => location.pathname === path
 
   return (
@@ -68,7 +82,7 @@ export default function Sidebar() {
         </div>
 
         <nav className="p-3 space-y-1 overflow-y-auto h-[calc(100%-4rem)]">
-          {mainItems.map((item) => (
+          {filteredItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -94,41 +108,6 @@ export default function Sidebar() {
               )}
             </NavLink>
           ))}
-
-          {isAdmin && (
-            <>
-              <div className="pt-3 pb-1">
-                <button
-                  onClick={() => setAdminOpen(!adminOpen)}
-                  className="flex items-center justify-between w-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
-                >
-                  <span>Administración</span>
-                  <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${adminOpen ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
-              {adminOpen && (
-                <div className="space-y-0.5 pl-1 border-l-2 border-slate-200 dark:border-slate-700 ml-3">
-                  {adminItems.map((item) => (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => {
-                        if (window.innerWidth < 1024) toggleSidebar()
-                      }}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group ${
-                        isActive(item.to)
-                          ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300'
-                          : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <item.icon className="h-4 w-4 flex-shrink-0" />
-                      <span>{item.label}</span>
-                    </NavLink>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
 
           <div className="pt-4 mt-2 border-t border-slate-200 dark:border-slate-800">
             <div className="px-3 py-2">
