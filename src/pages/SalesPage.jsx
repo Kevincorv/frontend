@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Plus, Search, Eye, Ban, Receipt, Trash2 } from 'lucide-react'
+import { Plus, Search, Eye, Ban, Receipt, Trash2, Edit2 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { getSales, createSale, cancelSale, getSale } from '../services/saleService'
+import { getSales, createSale, cancelSale, getSale, updateSale } from '../services/saleService'
 import { getClients } from '../services/clientService'
 import { formatCurrency, formatDate, getStatusColor, getStatusText } from '../utils/format'
 import Modal from '../components/Modal'
@@ -26,6 +26,7 @@ export default function SalesPage() {
   const [detailData, setDetailData] = useState(null)
   const [cancelOpen, setCancelOpen] = useState(false)
   const [cancelTarget, setCancelTarget] = useState(null)
+  const [editingId, setEditingId] = useState(null)
 
   const [searchInput, setSearchInput] = useState('')
 
@@ -62,7 +63,24 @@ export default function SalesPage() {
     searchRef.current = setTimeout(() => setPage(1), 300)
   }
 
-  const openCreate = () => { setForm({ clientId: '', items: [] }); setModalOpen(true) }
+  const openCreate = () => { setEditingId(null); setForm({ clientId: '', items: [] }); setModalOpen(true) }
+
+  const openEdit = async (sale) => {
+    try {
+      const data = await getSale(sale.id || sale._id)
+      setEditingId(data.id || data._id)
+      setForm({
+        clientId: data.clientId || data.client?.id || '',
+        items: (data.items || []).map(i => ({
+          productId: i.productId || i.product?.id,
+          productName: i.product_name || i.product?.name || '',
+          quantity: i.quantity || 1,
+          unitPrice: Number(i.unitPrice || 0),
+        })),
+      })
+      setModalOpen(true)
+    } catch { toast.error('Error al cargar venta') }
+  }
 
   const addItem = (product) => {
     if (!product) return
@@ -96,19 +114,26 @@ export default function SalesPage() {
     if (form.items.length === 0) { toast.error('Agrega al menos un producto'); return }
     setSaving(true)
     try {
-      await createSale({
-        clientId: form.clientId || undefined,
+      const payload = {
         items: form.items.map((i) => ({
           productId: i.productId,
           quantity: Number(i.quantity),
           unitPrice: Number(i.unitPrice),
         })),
-      })
-      toast.success('Venta registrada')
+      }
+      if (editingId) {
+        await updateSale(editingId, payload)
+        toast.success('Venta actualizada')
+      } else {
+        payload.clientId = form.clientId || undefined
+        await createSale(payload)
+        toast.success('Venta registrada')
+      }
       setModalOpen(false)
+      setEditingId(null)
       loadSales()
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al registrar venta')
+      toast.error(err.response?.data?.message || 'Error al guardar venta')
     } finally { setSaving(false) }
   }
 
@@ -149,9 +174,10 @@ export default function SalesPage() {
     { key: 'user', label: 'Usuario', render: (r) => r.user?.name || r.user_name || '-' },
     { key: 'acciones', label: 'Acciones', render: (row) => (
       <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-        <button onClick={() => viewDetail(row)} className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600"><Eye className="h-4 w-4" /></button>
+        <button onClick={() => viewDetail(row)} className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600" title="Ver detalle"><Eye className="h-4 w-4" /></button>
+        <button onClick={() => openEdit(row)} className="p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600" title="Editar"><Edit2 className="h-4 w-4" /></button>
         {row.status === 'completado' && (
-          <button onClick={() => confirmCancel(row)} className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600"><Ban className="h-4 w-4" /></button>
+          <button onClick={() => confirmCancel(row)} className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600" title="Cancelar"><Ban className="h-4 w-4" /></button>
         )}
       </div>
     )},
@@ -185,7 +211,7 @@ export default function SalesPage() {
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Nueva Venta" size="xl">
+      <Modal isOpen={modalOpen} onClose={() => { setModalOpen(false); setEditingId(null) }} title={editingId ? 'Editar Venta' : 'Nueva Venta'} size="xl">
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Cliente (opcional)</label>
@@ -246,7 +272,7 @@ export default function SalesPage() {
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600">Cancelar</button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 flex items-center gap-2">
               {saving && <LoadingSpinner size="sm" />}
-              Registrar Venta
+              {editingId ? 'Actualizar Venta' : 'Registrar Venta'}
             </button>
           </div>
         </form>

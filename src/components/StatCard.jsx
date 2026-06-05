@@ -46,6 +46,24 @@ export default function StatCard({ title, value, icon: Icon, color = 'primary', 
     purple: 'bg-purple-50 dark:bg-purple-900/20',
   }
 
+  const subtitleColors = {
+    primary: 'text-primary-600 dark:text-primary-400',
+    green: 'text-emerald-600 dark:text-emerald-400',
+    red: 'text-red-600 dark:text-red-400',
+    yellow: 'text-yellow-600 dark:text-yellow-400',
+    blue: 'text-blue-600 dark:text-blue-400',
+    purple: 'text-purple-600 dark:text-purple-400',
+  }
+
+  const subtitleBg = {
+    primary: 'bg-primary-50 dark:bg-primary-900/30',
+    green: 'bg-emerald-50 dark:bg-emerald-900/30',
+    red: 'bg-red-50 dark:bg-red-900/30',
+    yellow: 'bg-yellow-50 dark:bg-yellow-900/30',
+    blue: 'bg-blue-50 dark:bg-blue-900/30',
+    purple: 'bg-purple-50 dark:bg-purple-900/30',
+  }
+
   return (
     <div className="group bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex items-start justify-between">
@@ -57,7 +75,9 @@ export default function StatCard({ title, value, icon: Icon, color = 'primary', 
             {displayValue}
           </p>
           {subtitle && (
-            <p className="text-xs text-slate-400 dark:text-slate-500">{subtitle}</p>
+            <p className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-lg ${subtitleBg[color] || subtitleBg.primary} ${subtitleColors[color] || subtitleColors.primary}`}>
+              {subtitle}
+            </p>
           )}
         </div>
         <div className={`p-3 rounded-xl ${bgLight[color] || bgLight.primary} group-hover:scale-110 transition-transform duration-300`}>

@@ -19,3 +19,8 @@ export const cancelSale = async (id) => {
   const { data } = await api.put(`/sales/${id}/cancel`)
   return data
 }
+
+export const updateSale = async (id, formData) => {
+  const { data } = await api.put(`/sales/${id}`, formData)
+  return data
+}

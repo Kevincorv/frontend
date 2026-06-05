@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
 import {
   ShoppingCart, DollarSign, TrendingUp, Clock,
-  Receipt, Wallet, Star,
+  Receipt, Wallet, Star, Search,
 } from 'lucide-react'
 import { getCajaSummary, getCajaChart } from '../services/cajaService'
-import { getSalesReport } from '../services/reportService'
+import { getSales } from '../services/saleService'
 import { formatCurrency, formatDate, formatNumber } from '../utils/format'
 import StatCard from '../components/StatCard'
 import DataTable from '../components/DataTable'
 import LoadingSpinner from '../components/LoadingSpinner'
+import Pagination from '../components/Pagination'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,24 +29,29 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 export default function CajaPage() {
   const [summary, setSummary] = useState(null)
   const [chartData, setChartData] = useState(null)
-  const [todaySales, setTodaySales] = useState([])
+  const [allSales, setAllSales] = useState([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     const load = async () => {
-      const today = new Date().toISOString().slice(0, 10)
-      const [sum, cd, sales] = await Promise.all([
+      const [sum, cd, salesData] = await Promise.all([
         getCajaSummary().catch(e => { console.error('Caja summary error:', e); return null }),
         getCajaChart().catch(e => { console.error('Caja chart error:', e); return null }),
-        getSalesReport({ startDate: today, endDate: today, status: 'COMPLETED' }).catch(e => { console.error('Caja sales error:', e); return null }),
+        getSales({ page, limit: 10, search }).catch(e => { console.error('Caja sales error:', e); return null }),
       ])
       if (sum) setSummary(sum)
       if (cd) setChartData(cd)
-      if (sales) setTodaySales(Array.isArray(sales?.sales || sales?.data || sales) ? (sales.sales || sales.data || sales) : [])
+      if (salesData) {
+        setAllSales(salesData?.sales || salesData?.data || salesData || [])
+        setTotalPages(salesData?.totalPages || salesData?.pages || 1)
+      }
       setLoading(false)
     }
     load()
-  }, [])
+  }, [page, search])
 
   if (loading) {
     return (
@@ -67,6 +73,8 @@ export default function CajaPage() {
 
   const salesLabels = chartData?.last7Days?.map((d) => d.date) || []
   const salesValues = chartData?.last7Days?.map((d) => d.total || 0) || []
+
+  const granTotal = allSales.reduce((sum, s) => sum + Number(s.total || s.totalAmount || 0), 0)
 
   const lineData = {
     labels: salesLabels,
@@ -105,7 +113,7 @@ export default function CajaPage() {
   const columns = [
     { key: 'comprobante', label: 'Comprobante', render: (r) => r.comprobante || r.numero || `V-${String(r.id).padStart(5, '0')}` },
     { key: 'client', label: 'Cliente', render: (r) => r.client?.name || r.client_name || 'General' },
-    { key: 'createdAt', label: 'Hora', render: (r) => formatDate(r.createdAt) },
+    { key: 'createdAt', label: 'Fecha', render: (r) => formatDate(r.createdAt) },
     { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total || 0)}</span> },
   ]
 
@@ -153,22 +161,33 @@ export default function CajaPage() {
               <Receipt className="h-4 w-4 text-primary-600 dark:text-primary-400" />
             </div>
             <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-              Ventas del Día
+              Historial de Ventas
             </h2>
+          </div>
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1) }}
+              placeholder="Buscar venta..."
+              className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500"
+            />
           </div>
           <DataTable
             columns={columns}
-            data={todaySales}
+            data={allSales}
             loading={false}
-            emptyMessage="No hay ventas registradas hoy"
+            emptyMessage="No hay ventas registradas"
           />
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
             <div className="flex justify-between items-center">
               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                Total del día
+                Total General
               </span>
               <span className="text-lg font-bold text-green-600">
-                {formatCurrency(ingresosHoy)}
+                {formatCurrency(granTotal)}
               </span>
             </div>
           </div>

@@ -134,6 +134,7 @@ export default function DashboardPage() {
         <StatCard
           title="Ventas de Hoy"
           value={formatNumber(summary?.todaySalesCount || 0)}
+          subtitle={formatCurrency(summary?.todaySalesAmount || 0)}
           icon={ShoppingCart}
           color="primary"
         />
