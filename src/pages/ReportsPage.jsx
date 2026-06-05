@@ -79,9 +79,9 @@ function SalesReport() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({
-    startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().slice(0, 10),
-    endDate: new Date().toISOString().slice(0, 10),
-    status: 'COMPLETED',
+    startDate: '',
+    endDate: '',
+    status: '',
   })
 
   useEffect(() => {
