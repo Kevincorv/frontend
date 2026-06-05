@@ -16,16 +16,13 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from 'chart.js'
-import { Bar, Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState(null)
@@ -85,23 +82,12 @@ export default function DashboardPage() {
     labels: salesLabels,
     datasets: [
       {
-        label: 'Ventas últimos 7 días',
+        label: 'Ventas',
         data: salesValues,
-        borderColor: '#10b981',
-        backgroundColor: (ctx) => {
-          if (!ctx.chart.chartArea) return 'rgba(16,185,129,0.1)'
-          const gradient = ctx.chart.ctx.createLinearGradient(0, ctx.chart.chartArea.top, 0, ctx.chart.chartArea.bottom)
-          gradient.addColorStop(0, 'rgba(16,185,129,0.3)')
-          gradient.addColorStop(1, 'rgba(16,185,129,0.02)')
-          return gradient
-        },
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#10b981',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        backgroundColor: 'rgba(16,185,129,0.85)',
+        hoverBackgroundColor: '#10b981',
+        borderRadius: 6,
+        borderSkipped: false,
       },
     ],
   }
@@ -187,7 +173,7 @@ export default function DashboardPage() {
             </h2>
           </div>
           {salesLabels.length > 0 ? (
-            <Line data={lineData} options={chartOptions} />
+            <Bar data={lineData} options={chartOptions} />
           ) : (
             <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
           )}
