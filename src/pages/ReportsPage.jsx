@@ -238,6 +238,7 @@ function TrendingReport() {
 function DailyReport() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [expandedDay, setExpandedDay] = useState(null)
 
   useEffect(() => {
     const load = async () => {
@@ -248,16 +249,21 @@ function DailyReport() {
         const d = await getSalesReport({
           fecha_desde: start.toISOString().slice(0, 10),
           fecha_hasta: end.toISOString().slice(0, 10),
-          status: 'COMPLETED',
         })
         const sales = d?.sales || d?.data || d || []
         const dailyMap = {}
         sales.forEach(s => {
           const day = new Date(s.createdAt).toISOString().slice(0, 10)
-          if (!dailyMap[day]) dailyMap[day] = { date: day, count: 0, total: 0, subtotal: 0 }
+          if (!dailyMap[day]) dailyMap[day] = { date: day, count: 0, total: 0, subtotal: 0, products: {} }
           dailyMap[day].count++
           dailyMap[day].total += Number(s.total || s.totalAmount || 0)
           dailyMap[day].subtotal += Number(s.subtotal || s.totalAmount || 0)
+          ;(s.items || []).forEach(item => {
+            const name = item.product_name || item.product?.name || `Producto #${item.productId}`
+            if (!dailyMap[day].products[name]) dailyMap[day].products[name] = { name, quantity: 0, total: 0 }
+            dailyMap[day].products[name].quantity += item.quantity || 0
+            dailyMap[day].products[name].total += Number(item.subtotal || (item.quantity || 0) * (item.unitPrice || 0))
+          })
         })
         setData(Object.values(dailyMap).sort((a, b) => b.date.localeCompare(a.date)))
       } catch { toast.error('Error al cargar detalle diario') }
@@ -266,10 +272,9 @@ function DailyReport() {
     load()
   }, [])
 
-  const columns = [
-    { key: 'date', label: 'Fecha', render: (r) => formatDate(r.date) },
-    { key: 'count', label: 'Ventas', render: (r) => formatNumber(r.count) },
-    { key: 'subtotal', label: 'Subtotal', render: (r) => formatCurrency(r.subtotal) },
+  const productColumns = [
+    { key: 'name', label: 'Producto' },
+    { key: 'quantity', label: 'Cant.', render: (r) => formatNumber(r.quantity) },
     { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total)}</span> },
   ]
 
@@ -279,9 +284,58 @@ function DailyReport() {
         <Calendar className="h-5 w-5 text-purple-500" />
         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50">Detalle por Día (últimos 30 días)</h2>
       </div>
-      <div className="overflow-x-auto">
-        <DataTable columns={columns} data={data} loading={loading}
-          emptyMessage="No hay datos en los últimos 30 días" />
+      <div className="space-y-2">
+        {loading ? (
+          <div className="flex justify-center py-10"><LoadingSpinner size="lg" /></div>
+        ) : data.length === 0 ? (
+          <p className="text-sm text-slate-400 text-center py-8">No hay datos en los últimos 30 días</p>
+        ) : (
+          data.map(day => (
+            <div key={day.date} className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+              <button
+                onClick={() => setExpandedDay(expandedDay === day.date ? null : day.date)}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    expandedDay === day.date ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'
+                  }`}>
+                    {formatDate(day.date)}
+                  </span>
+                  <span className="text-sm text-slate-500">{formatNumber(day.count)} ventas</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-semibold text-green-600">{formatCurrency(day.total)}</span>
+                  <svg className={`w-4 h-4 text-slate-400 transition-transform ${expandedDay === day.date ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
+              {expandedDay === day.date && (
+                <div className="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-4 py-3">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 dark:border-slate-700">
+                        <th className="text-left px-3 py-1.5 text-xs font-semibold text-slate-500">Producto</th>
+                        <th className="text-center px-3 py-1.5 text-xs font-semibold text-slate-500 w-20">Cant.</th>
+                        <th className="text-right px-3 py-1.5 text-xs font-semibold text-slate-500 w-28">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                      {Object.values(day.products).map((p, i) => (
+                        <tr key={i}>
+                          <td className="px-3 py-1.5 text-slate-700 dark:text-slate-300">{p.name}</td>
+                          <td className="px-3 py-1.5 text-center text-slate-700 dark:text-slate-300">{formatNumber(p.quantity)}</td>
+                          <td className="px-3 py-1.5 text-right text-slate-700 dark:text-slate-300 font-medium">{formatCurrency(p.total)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   )
