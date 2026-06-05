@@ -94,6 +94,7 @@ export default function DashboardPage() {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
     },
@@ -101,18 +102,18 @@ export default function DashboardPage() {
       y: {
         beginAtZero: true,
         grid: { color: 'rgba(0,0,0,0.05)' },
-        ticks: { font: { size: 11 } },
+        ticks: { font: { size: 10 } },
       },
       x: {
         grid: { display: false },
-        ticks: { font: { size: 11 } },
+        ticks: { font: { size: 9 }, maxRotation: 45 },
       },
     },
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+    <div className="space-y-4 lg:space-y-6 animate-fade-in">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
         <StatCard
           title="Ventas de Hoy"
           value={formatNumber(summary?.todaySalesCount || 0)}
@@ -146,42 +147,46 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card p-5 sm:p-6 animate-slide-up">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/30">
-              <TrendingUp className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        <div className="card p-3 sm:p-4 lg:p-6 animate-slide-up">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-4">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-primary-50 dark:bg-primary-900/30">
+              <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-600 dark:text-primary-400" />
             </div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50">
               Productos más vendidos
             </h2>
           </div>
-          {topSoldLabels.length > 0 ? (
-            <Bar data={barData} options={chartOptions} />
-          ) : (
-            <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
-          )}
+          <div className="h-48 sm:h-64">
+            {topSoldLabels.length > 0 ? (
+              <Bar data={barData} options={chartOptions} />
+            ) : (
+              <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
+            )}
+          </div>
         </div>
 
-        <div className="card p-5 sm:p-6 animate-slide-up">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/30">
-              <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+        <div className="card p-3 sm:p-4 lg:p-6 animate-slide-up">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-4">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-green-50 dark:bg-green-900/30">
+              <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50">
               Ventas últimos 7 días
             </h2>
           </div>
-          {salesLabels.length > 0 ? (
-            <Bar data={lineData} options={chartOptions} />
-          ) : (
-            <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
-          )}
+          <div className="h-48 sm:h-64">
+            {salesLabels.length > 0 ? (
+              <Bar data={lineData} options={chartOptions} />
+            ) : (
+              <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="card p-4 sm:p-6 animate-slide-up">
-        <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 mb-4">
+      <div className="card p-3 sm:p-4 lg:p-6 animate-slide-up">
+        <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 mb-2 sm:mb-4">
           Últimos Movimientos
         </h2>
         {recentMovements.length === 0 ? (

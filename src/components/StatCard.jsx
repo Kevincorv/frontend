@@ -65,24 +65,24 @@ export default function StatCard({ title, value, icon: Icon, color = 'primary', 
   }
 
   return (
-    <div className="group bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-      <div className="flex items-start justify-between">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+    <div className="group bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-3 sm:p-4 lg:p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+      <div className="flex items-start justify-between gap-2">
+        <div className="space-y-1 sm:space-y-2 min-w-0">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
             {title}
           </p>
-          <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+          <p className="text-base sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
             {displayValue}
           </p>
           {subtitle && (
-            <p className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-lg ${subtitleBg[color] || subtitleBg.primary} ${subtitleColors[color] || subtitleColors.primary}`}>
+            <p className={`inline-block text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg ${subtitleBg[color] || subtitleBg.primary} ${subtitleColors[color] || subtitleColors.primary}`}>
               {subtitle}
             </p>
           )}
         </div>
-        <div className={`p-3 rounded-xl ${bgLight[color] || bgLight.primary} group-hover:scale-110 transition-transform duration-300`}>
-          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${gradients[color] || gradients.primary} flex items-center justify-center shadow-sm`}>
-            <Icon className="h-5 w-5 text-white" />
+        <div className={`p-1.5 sm:p-2 lg:p-3 rounded-xl flex-shrink-0 ${bgLight[color] || bgLight.primary} group-hover:scale-110 transition-transform duration-300`}>
+          <div className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br ${gradients[color] || gradients.primary} flex items-center justify-center shadow-sm`}>
+            <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-white" />
           </div>
         </div>
       </div>
