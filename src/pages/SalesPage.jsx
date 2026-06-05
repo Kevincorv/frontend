@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Plus, Search, Eye, Ban, Receipt, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getSales, createSale, cancelSale, getSale } from '../services/saleService'
@@ -17,6 +17,7 @@ export default function SalesPage() {
   const [filters, setFilters] = useState({ search: '', clientId: '', status: '', fecha_desde: '', fecha_hasta: '' })
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const searchRef = useRef()
   const [modalOpen, setModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [clients, setClients] = useState([])
@@ -26,11 +27,13 @@ export default function SalesPage() {
   const [cancelOpen, setCancelOpen] = useState(false)
   const [cancelTarget, setCancelTarget] = useState(null)
 
+  const [searchInput, setSearchInput] = useState('')
+
   const loadSales = useCallback(async () => {
     setLoading(true)
     try {
       const params = { page, limit: 10 }
-      if (filters.search) params.search = filters.search
+      if (searchInput) params.search = searchInput
       if (filters.clientId) params.clientId = filters.clientId
       if (filters.status) params.status = filters.status
       if (filters.fecha_desde) params.fecha_desde = filters.fecha_desde
@@ -41,16 +44,23 @@ export default function SalesPage() {
     } catch {
       toast.error('Error al cargar ventas')
     } finally { setLoading(false) }
-  }, [page, filters])
+  }, [page, searchInput, filters.clientId, filters.status, filters.fecha_desde, filters.fecha_hasta])
 
-  const loadClients = async () => {
-    try {
-      const data = await getClients({ limit: 100 })
-      setClients(data?.clients || data?.data || data || [])
-    } catch {}
+  useEffect(() => { loadSales() }, [loadSales])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      getClients({ limit: 100 }).then(d => setClients(d?.clients || d?.data || d || [])).catch(() => {})
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value
+    setSearchInput(value)
+    if (searchRef.current) clearTimeout(searchRef.current)
+    searchRef.current = setTimeout(() => setPage(1), 300)
   }
-
-  useEffect(() => { loadSales(); loadClients() }, [loadSales])
 
   const openCreate = () => { setForm({ clientId: '', items: [] }); setModalOpen(true) }
 
@@ -153,7 +163,7 @@ export default function SalesPage() {
         <div className="flex items-center gap-3 flex-1 w-full flex-wrap">
           <div className="relative flex-1 min-w-[200px] max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input type="text" value={filters.search} onChange={(e) => { setFilters({...filters, search: e.target.value}); setPage(1) }} placeholder="Buscar..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
+            <input type="text" value={searchInput} onChange={handleSearchChange} placeholder="Buscar..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
           </div>
           <select value={filters.clientId} onChange={(e) => { setFilters({...filters, clientId: e.target.value}); setPage(1) }} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2">
             <option value="">Todos los clientes</option>

@@ -23,16 +23,14 @@ export default function ProductsPage() {
   const loadProducts = useCallback(async () => {
     setLoading(true)
     try {
-      const params = {}
-      if (search) params.search = search
-      const data = await getProducts(params)
+      const data = await getProducts({ limit: 500 })
       setProducts(data?.products || data?.data || data || [])
     } catch {
       toast.error('Error al cargar productos')
     } finally {
       setLoading(false)
     }
-  }, [search])
+  }, [])
 
   useEffect(() => {
     loadProducts()
