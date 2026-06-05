@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Search, Package, X } from 'lucide-react'
 import { getProducts } from '../services/productService'
+import { formatCurrency } from '../utils/format'
 
 export default function ProductSelect({ onSelect, placeholder = 'Buscar producto...', autoFocus = false }) {
   const [query, setQuery] = useState('')
@@ -105,11 +106,11 @@ export default function ProductSelect({ onSelect, placeholder = 'Buscar producto
                   {product.nombre || product.name}
                 </p>
                 <p className="text-xs text-slate-500">
-                  {product.codigo_barras || product.codigo || ''} — Stock: {product.stock || 0}
+                  {product.code || product.codigo_barras || product.codigo || ''} — Stock: {product.stock ?? 0}
                 </p>
               </div>
               <span className="ml-auto text-xs font-medium text-primary-600">
-                ${product.precio_venta || product.price || 0}
+                {formatCurrency(product.salePrice || product.precio_venta || product.price || 0)}
               </span>
             </button>
           ))}
