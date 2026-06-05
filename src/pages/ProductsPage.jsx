@@ -169,10 +169,9 @@ export default function ProductsPage() {
         <span className="font-medium">{row.name}</span>
       </div>
     )},
-    { key: 'barcode', label: 'Código' },
-    { key: 'category', label: 'Categoría', render: (row) => row.category?.name || '-' },
-    { key: 'purchasePrice', label: 'Compra', render: (row) => formatCurrency(row.purchasePrice) },
-    { key: 'salePrice', label: 'Venta', render: (row) => formatCurrency(row.salePrice) },
+    { key: 'code', label: 'Código', render: (row) => row.code || row.barcode || '-' },
+    { key: 'unitType', label: 'Tipo', render: (row) => row.unitType || '-' },
+    { key: 'salePrice', label: 'Precio', render: (row) => formatCurrency(row.salePrice) },
     { key: 'stock', label: 'Stock', render: (row) => {
       const isLow = row.stock <= (row.minStock || 0)
       return <span className={`font-medium ${isLow ? 'text-red-600' : ''}`}>{formatNumber(row.stock)}</span>
