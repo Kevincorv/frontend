@@ -62,7 +62,7 @@ export default function LoginPage() {
               <Package className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-              BodegaSys
+              En lo de Apu
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
               Inicia sesión para continuar

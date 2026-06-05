@@ -70,7 +70,7 @@ export default function Sidebar() {
               <Package className="h-5 w-5 text-white" />
             </div>
             <span className="text-lg font-bold text-white tracking-wide">
-              BodegaSys
+              En lo de Apu
             </span>
           </div>
           <button

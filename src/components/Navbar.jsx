@@ -41,7 +41,7 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
 
-  const currentTitle = pageTitles[location.pathname] || 'Sistema de Bodega'
+  const currentTitle = pageTitles[location.pathname] || 'En lo de Apu'
 
   useEffect(() => {
     const fetchUnreadCount = async () => {

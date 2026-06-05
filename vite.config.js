@@ -17,9 +17,9 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Sistema de Gestión de Bodega',
-        short_name: 'Bodega',
-        description: 'Sistema de gestión de inventario, ventas y más',
+        name: 'En lo de Apu',
+        short_name: 'En lo de Apu',
+        description: 'Sistema de gestión para En lo de Apu',
         theme_color: '#1e40af',
         background_color: '#f8fafc',
         display: 'standalone',
