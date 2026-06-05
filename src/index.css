@@ -11,8 +11,21 @@
     --color-bg: 15 23 42;
     --color-text: 248 250 252;
   }
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
     @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50;
+    overscroll-behavior: none;
+  }
+  input, select, textarea, button {
+    font-size: 16px;
+  }
+  @media (max-width: 640px) {
+    .container {
+      @apply px-3;
+    }
   }
 }
 
@@ -31,5 +44,17 @@
   }
   .card {
     @apply bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700;
+  }
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6;
+  }
+  .page-header {
+    @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6;
+  }
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4;
+  }
+  .card-stats {
+    @apply bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 sm:p-6;
   }
 }

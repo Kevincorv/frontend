@@ -1,14 +1,14 @@
-export const formatCurrency = (value, currency = 'USD') => {
-  return new Intl.NumberFormat('es-PE', {
+export const formatCurrency = (value, currency = 'PYG') => {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
     currency,
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
   }).format(value || 0)
 }
 
 export const formatDate = (date) => {
   if (!date) return ''
-  return new Intl.DateTimeFormat('es-PE', {
+  return new Intl.DateTimeFormat('es-PY', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -17,7 +17,7 @@ export const formatDate = (date) => {
 
 export const formatDateTime = (date) => {
   if (!date) return ''
-  return new Intl.DateTimeFormat('es-PE', {
+  return new Intl.DateTimeFormat('es-PY', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -80,5 +80,5 @@ export const getStatusText = (status) => {
 
 export const formatNumber = (value) => {
   if (value === null || value === undefined) return '0'
-  return new Intl.NumberFormat('es-PE').format(value)
+  return new Intl.NumberFormat('es-PY').format(value)
 }

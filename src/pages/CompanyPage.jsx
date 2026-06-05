@@ -12,7 +12,7 @@ export default function CompanyPage() {
     email: '',
     ruc: '',
     taxRate: '',
-    currency: 'USD',
+    currency: 'PYG',
     logo: null,
   })
   const [loading, setLoading] = useState(true)
@@ -32,7 +32,7 @@ export default function CompanyPage() {
             email: data.email || '',
             ruc: data.ruc || '',
             taxRate: data.taxRate || '',
-            currency: data.currency || 'USD',
+            currency: data.currency || 'PYG',
             logo: null,
           })
           if (data.logo) setLogoPreview(data.logo)
@@ -153,6 +153,7 @@ export default function CompanyPage() {
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Moneda</label>
               <select name="currency" value={form.currency} onChange={handleChange} className="w-full px-3 py-2 text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-primary-500">
+                <option value="PYG">PYG - Guaraní</option>
                 <option value="USD">USD - Dólar</option>
                 <option value="PEN">PEN - Sol</option>
                 <option value="EUR">EUR - Euro</option>

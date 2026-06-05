@@ -27,15 +27,15 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
       <div
         className="fixed inset-0 bg-black/50 transition-opacity"
         onClick={onClose}
       />
       <div
-        className={`relative w-full ${sizes[size]} bg-white dark:bg-slate-800 rounded-xl shadow-2xl transform transition-all`}
+        className={`relative w-full ${sizes[size]} bg-white dark:bg-slate-800 sm:rounded-xl shadow-2xl transform transition-all rounded-t-xl sm:rounded-t-xl max-h-[90vh] sm:max-h-none`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-200 dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-xl">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
             {title}
           </h2>
@@ -46,7 +46,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">{children}</div>
+        <div className="px-4 sm:px-6 py-4 max-h-[70vh] overflow-y-auto">{children}</div>
       </div>
     </div>
   )

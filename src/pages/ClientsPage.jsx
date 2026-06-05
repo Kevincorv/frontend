@@ -170,7 +170,7 @@ export default function ClientsPage() {
                     <td className="px-3 py-2 text-slate-700 dark:text-slate-300 font-medium">{sale.comprobante || sale.numero || '-'}</td>
                     <td className="px-3 py-2 text-slate-500">{formatDate(sale.createdAt)}</td>
                     <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
-                      {new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }).format(sale.total || 0)}
+                      {new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(sale.total || 0)}
                     </td>
                     <td className="px-3 py-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sale.estado === 'completado' ? 'text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300' : 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-300'}`}>
