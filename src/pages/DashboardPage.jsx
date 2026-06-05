@@ -35,7 +35,7 @@ export default function DashboardPage() {
       const [sum, rm, cd] = await Promise.all([
         getSummary().catch(e => { console.error('Summary error:', e); return null }),
         getRecentMovements().catch(e => { console.error('Movements error:', e); return null }),
-        getChartData().catch(e => { console.error('ChartData error:', e); return null }),
+        getChartData('month').catch(e => { console.error('ChartData error:', e); return null }),
       ])
       if (sum) setSummary(sum)
       if (rm) setRecentMovements(Array.isArray(rm?.movements || rm?.data || rm) ? (rm.movements || rm.data || rm) : [])
@@ -56,12 +56,12 @@ export default function DashboardPage() {
   const topSoldLabels = chartData?.topProducts?.map((p) => p.name) || []
   const topSoldValues = chartData?.topProducts?.map((p) => p.total || 0) || []
 
-  const salesLabels = chartData?.last7Days?.map((d) => d.date) || chartData?.sales?.reduce((acc, s) => {
+  const salesLabels = chartData?.dailySales?.map((d) => d.date) || chartData?.sales?.reduce((acc, s) => {
     const day = new Date(s.createdAt).toISOString().slice(0, 10)
     if (!acc.includes(day)) acc.push(day)
     return acc
   }, []) || []
-  const salesValues = chartData?.last7Days?.map((d) => d.total || 0) || []
+  const salesValues = chartData?.dailySales?.map((d) => d.total || 0) || []
 
   const barData = {
     labels: topSoldLabels,
@@ -92,7 +92,27 @@ export default function DashboardPage() {
     ],
   }
 
-  const chartOptions = {
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { font: { size: 10 } },
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { size: 10 } },
+      },
+    },
+  }
+
+  const salesChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -159,7 +179,7 @@ export default function DashboardPage() {
           </div>
           <div className="h-48 sm:h-64">
             {topSoldLabels.length > 0 ? (
-              <Bar data={barData} options={chartOptions} />
+              <Bar data={barData} options={barOptions} />
             ) : (
               <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
             )}
@@ -172,12 +192,12 @@ export default function DashboardPage() {
               <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 dark:text-green-400" />
             </div>
             <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50">
-              Ventas últimos 7 días
+              Ventas últimos 30 días
             </h2>
           </div>
           <div className="h-48 sm:h-64">
             {salesLabels.length > 0 ? (
-              <Bar data={lineData} options={chartOptions} />
+              <Bar data={lineData} options={salesChartOptions} />
             ) : (
               <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
             )}

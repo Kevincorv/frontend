@@ -15,7 +15,7 @@ export const getRecentMovements = async () => {
   return data
 }
 
-export const getChartData = async () => {
-  const { data } = await api.get('/dashboard/chart-data')
+export const getChartData = async (period = 'month') => {
+  const { data } = await api.get('/dashboard/chart-data', { params: { period } })
   return data
 }
