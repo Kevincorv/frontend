@@ -2,7 +2,7 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "buildCommand": "npx vite build",
+  "buildCommand": "rm -rf node_modules && npm install && npx vite build",
   "outputDirectory": "dist",
   "framework": "vite",
   "env": {
