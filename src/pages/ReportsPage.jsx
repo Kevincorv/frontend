@@ -101,9 +101,8 @@ function SalesReport() {
     finally { setLoading(false) }
   }
 
-  const totalVentas = data.reduce((s, r) => s + Number(r.total || 0), 0)
-  const totalImpuesto = data.reduce((s, r) => s + Number(r.tax || 0), 0)
-  const totalSubtotal = data.reduce((s, r) => s + Number(r.subtotal || 0), 0)
+  const totalVentas = data.reduce((s, r) => s + Number(r.total || r.totalAmount || 0), 0)
+  const totalSubtotal = data.reduce((s, r) => s + Number(r.subtotal || r.totalAmount || 0), 0)
 
   const handleExportExcel = async () => {
     try {
@@ -120,9 +119,8 @@ function SalesReport() {
     { key: 'comprobante', label: 'Comprobante', render: (r) => r.comprobante || r.numero || `V-${String(r.id).padStart(5, '0')}` },
     { key: 'client', label: 'Cliente', render: (r) => r.client?.name || r.client_name || 'General' },
     { key: 'createdAt', label: 'Fecha', render: (r) => formatDate(r.createdAt) },
-    { key: 'subtotal', label: 'Subtotal', render: (r) => formatCurrency(r.subtotal || 0) },
-    { key: 'tax', label: 'Impuesto', render: (r) => formatCurrency(r.tax || 0) },
-    { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total || 0)}</span> },
+    { key: 'subtotal', label: 'Subtotal', render: (r) => formatCurrency(r.subtotal || r.totalAmount || 0) },
+    { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total || r.totalAmount || 0)}</span> },
     { key: 'user', label: 'Vendedor', render: (r) => r.user?.name || r.user_name || '-' },
   ]
 
@@ -133,18 +131,14 @@ function SalesReport() {
         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50">Reporte de Ventas</h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-          <p className="text-xs text-green-600 dark:text-green-400 font-medium">Total Ventas</p>
-          <p className="text-lg font-bold text-green-700 dark:text-green-300">{formatCurrency(totalVentas)}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800/30">
+          <p className="text-xs text-green-600 dark:text-green-400 font-medium uppercase tracking-wider">Total Ventas</p>
+          <p className="text-2xl font-bold text-green-700 dark:text-green-300">{formatCurrency(totalVentas)}</p>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-          <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Total Subtotal</p>
-          <p className="text-lg font-bold text-blue-700 dark:text-blue-300">{formatCurrency(totalSubtotal)}</p>
-        </div>
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4">
-          <p className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">Total Impuesto</p>
-          <p className="text-lg font-bold text-yellow-700 dark:text-yellow-300">{formatCurrency(totalImpuesto)}</p>
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800/30">
+          <p className="text-xs text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wider">Total Subtotal</p>
+          <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{formatCurrency(totalSubtotal)}</p>
         </div>
       </div>
 
@@ -260,11 +254,10 @@ function DailyReport() {
         const dailyMap = {}
         sales.forEach(s => {
           const day = new Date(s.createdAt).toISOString().slice(0, 10)
-          if (!dailyMap[day]) dailyMap[day] = { date: day, count: 0, total: 0, subtotal: 0, tax: 0 }
+          if (!dailyMap[day]) dailyMap[day] = { date: day, count: 0, total: 0, subtotal: 0 }
           dailyMap[day].count++
-          dailyMap[day].total += Number(s.total || 0)
-          dailyMap[day].subtotal += Number(s.subtotal || 0)
-          dailyMap[day].tax += Number(s.tax || 0)
+          dailyMap[day].total += Number(s.total || s.totalAmount || 0)
+          dailyMap[day].subtotal += Number(s.subtotal || s.totalAmount || 0)
         })
         setData(Object.values(dailyMap).sort((a, b) => b.date.localeCompare(a.date)))
       } catch { toast.error('Error al cargar detalle diario') }
@@ -277,7 +270,6 @@ function DailyReport() {
     { key: 'date', label: 'Fecha', render: (r) => formatDate(r.date) },
     { key: 'count', label: 'Ventas', render: (r) => formatNumber(r.count) },
     { key: 'subtotal', label: 'Subtotal', render: (r) => formatCurrency(r.subtotal) },
-    { key: 'tax', label: 'Impuesto', render: (r) => formatCurrency(r.tax) },
     { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total)}</span> },
   ]
 

@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react'
 import {
   Package,
-  AlertTriangle,
-  ArrowRightLeft,
   DollarSign,
   TrendingUp,
   ShoppingCart,
-  CreditCard,
 } from 'lucide-react'
-import { getSummary, getLowStock, getRecentMovements, getChartData } from '../services/dashboardService'
-import { formatCurrency, formatDate, getStatusColor, getStatusText, formatNumber } from '../utils/format'
+import { getSummary, getChartData } from '../services/dashboardService'
+import { formatCurrency, formatNumber } from '../utils/format'
 import StatCard from '../components/StatCard'
 import LoadingSpinner from '../components/LoadingSpinner'
 import {
@@ -30,22 +27,16 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState(null)
-  const [lowStock, setLowStock] = useState([])
-  const [recentMovements, setRecentMovements] = useState([])
   const [chartData, setChartData] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const load = async () => {
-      const [sum, ls, rm, cd] = await Promise.all([
+      const [sum, cd] = await Promise.all([
         getSummary().catch(e => { console.error('Summary error:', e); return null }),
-        getLowStock().catch(e => { console.error('LowStock error:', e); return null }),
-        getRecentMovements().catch(e => { console.error('Movements error:', e); return null }),
         getChartData().catch(e => { console.error('ChartData error:', e); return null }),
       ])
       if (sum) setSummary(sum)
-      if (ls) setLowStock(Array.isArray(ls?.products || ls?.data || ls) ? (ls.products || ls.data || ls) : [])
-      if (rm) setRecentMovements(Array.isArray(rm?.movements || rm?.data || rm) ? (rm.movements || rm.data || rm) : [])
       if (cd) setChartData(cd)
       setLoading(false)
     }
@@ -63,7 +54,11 @@ export default function DashboardPage() {
   const topSoldLabels = chartData?.topProducts?.map((p) => p.name) || []
   const topSoldValues = chartData?.topProducts?.map((p) => p.total || 0) || []
 
-  const salesLabels = chartData?.last7Days?.map((d) => d.date) || []
+  const salesLabels = chartData?.last7Days?.map((d) => d.date) || chartData?.sales?.reduce((acc, s) => {
+    const day = new Date(s.createdAt).toISOString().slice(0, 10)
+    if (!acc.includes(day)) acc.push(day)
+    return acc
+  }, []) || []
   const salesValues = chartData?.last7Days?.map((d) => d.total || 0) || []
 
   const barData = {
@@ -126,7 +121,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="Ventas de Hoy"
           value={formatNumber(summary?.todaySalesCount || 0)}
@@ -144,24 +139,6 @@ export default function DashboardPage() {
           value={formatNumber(summary?.totalProducts || 0)}
           icon={Package}
           color="primary"
-        />
-        <StatCard
-          title="Stock Bajo"
-          value={formatNumber(summary?.lowStockCount || 0)}
-          icon={AlertTriangle}
-          color="red"
-        />
-        <StatCard
-          title="Movimientos Hoy"
-          value={formatNumber(summary?.todayMovements || 0)}
-          icon={ArrowRightLeft}
-          color="blue"
-        />
-        <StatCard
-          title="Valor Inventario"
-          value={formatCurrency(summary?.inventoryValue || 0)}
-          icon={CreditCard}
-          color="purple"
         />
       </div>
 
@@ -195,92 +172,6 @@ export default function DashboardPage() {
             <Line data={lineData} options={chartOptions} />
           ) : (
             <p className="text-sm text-slate-400 text-center py-8">Sin datos de ventas</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card p-5 sm:p-6 animate-slide-up">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30">
-              <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
-            </div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-              Productos con Stock Bajo
-            </h2>
-          </div>
-          {lowStock.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-6">
-              No hay productos con stock bajo
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Producto</th>
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Stock</th>
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Mínimo</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                  {lowStock.slice(0, 5).map((p, i) => (
-                    <tr key={p.id || p._id} className={`${i % 2 === 0 ? 'bg-white dark:bg-transparent' : 'bg-slate-50/50 dark:bg-slate-800/20'} hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors`}>
-                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 font-medium">{p.name}</td>
-                      <td className="px-3 py-2.5">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-semibold">
-                          {p.stock}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2.5 text-slate-500">{p.minStock}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        <div className="card p-5 sm:p-6 animate-slide-up">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30">
-              <ArrowRightLeft className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-              Últimos Movimientos
-            </h2>
-          </div>
-          {recentMovements.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-6">
-              Sin movimientos recientes
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Producto</th>
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Tipo</th>
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Cant.</th>
-                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Fecha</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                  {recentMovements.slice(0, 5).map((m, i) => (
-                    <tr key={m.id || m._id} className={`${i % 2 === 0 ? 'bg-white dark:bg-transparent' : 'bg-slate-50/50 dark:bg-slate-800/20'} hover:bg-primary-50/50 dark:hover:bg-primary-900/10 transition-colors`}>
-                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 font-medium">{m.product?.name || m.product_name || '-'}</td>
-                      <td className="px-3 py-2.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(m.type)}`}>
-                          {getStatusText(m.type)}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300">{m.quantity}</td>
-                      <td className="px-3 py-2.5 text-slate-500 text-xs">{formatDate(m.createdAt)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           )}
         </div>
       </div>
