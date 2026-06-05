@@ -72,8 +72,11 @@ export default function DashboardPage() {
       {
         label: 'Productos más vendidos',
         data: topSoldValues,
-        backgroundColor: '#3b82f6',
-        borderRadius: 6,
+        backgroundColor: [
+          '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+        ],
+        borderRadius: 8,
+        borderSkipped: false,
       },
     ],
   }
@@ -85,10 +88,20 @@ export default function DashboardPage() {
         label: 'Ventas últimos 7 días',
         data: salesValues,
         borderColor: '#10b981',
-        backgroundColor: 'rgba(16,185,129,0.1)',
+        backgroundColor: (ctx) => {
+          if (!ctx.chart.chartArea) return 'rgba(16,185,129,0.1)'
+          const gradient = ctx.chart.ctx.createLinearGradient(0, ctx.chart.chartArea.top, 0, ctx.chart.chartArea.bottom)
+          gradient.addColorStop(0, 'rgba(16,185,129,0.3)')
+          gradient.addColorStop(1, 'rgba(16,185,129,0.02)')
+          return gradient
+        },
         fill: true,
         tension: 0.4,
         pointBackgroundColor: '#10b981',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   }
@@ -102,15 +115,17 @@ export default function DashboardPage() {
       y: {
         beginAtZero: true,
         grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { font: { size: 11 } },
       },
       x: {
         grid: { display: false },
+        ticks: { font: { size: 11 } },
       },
     },
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <StatCard
           title="Ventas de Hoy"
@@ -151,10 +166,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+        <div className="card p-5 sm:p-6 animate-slide-up">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-primary-600" />
-            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50">
+            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/30">
+              <TrendingUp className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
               Productos más vendidos
             </h2>
           </div>
@@ -165,10 +182,12 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+        <div className="card p-5 sm:p-6 animate-slide-up">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-green-500" />
-            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50">
+            <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/30">
+              <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
               Ventas últimos 7 días
             </h2>
           </div>
@@ -181,10 +200,15 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50 mb-4">
-            Productos con Stock Bajo
-          </h2>
+        <div className="card p-5 sm:p-6 animate-slide-up">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30">
+              <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+              Productos con Stock Bajo
+            </h2>
+          </div>
           {lowStock.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-6">
               No hay productos con stock bajo
@@ -194,19 +218,21 @@ export default function DashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Producto</th>
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Stock</th>
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Mínimo</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Producto</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Stock</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Mínimo</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  {lowStock.slice(0, 5).map((p) => (
-                    <tr key={p.id || p._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{p.name}</td>
-                      <td className="px-3 py-2">
-                        <span className="text-red-600 font-medium">{p.stock}</span>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                  {lowStock.slice(0, 5).map((p, i) => (
+                    <tr key={p.id || p._id} className={`${i % 2 === 0 ? 'bg-white dark:bg-transparent' : 'bg-slate-50/50 dark:bg-slate-800/20'} hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors`}>
+                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 font-medium">{p.name}</td>
+                      <td className="px-3 py-2.5">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-semibold">
+                          {p.stock}
+                        </span>
                       </td>
-                      <td className="px-3 py-2 text-slate-500">{p.minStock}</td>
+                      <td className="px-3 py-2.5 text-slate-500">{p.minStock}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -215,10 +241,15 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-50 mb-4">
-            Últimos Movimientos
-          </h2>
+        <div className="card p-5 sm:p-6 animate-slide-up">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30">
+              <ArrowRightLeft className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+              Últimos Movimientos
+            </h2>
+          </div>
           {recentMovements.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-6">
               Sin movimientos recientes
@@ -228,23 +259,23 @@ export default function DashboardPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-700">
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Producto</th>
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Tipo</th>
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Cant.</th>
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-slate-500">Fecha</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Producto</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Tipo</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Cant.</th>
+                    <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-500">Fecha</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  {recentMovements.slice(0, 5).map((m) => (
-                    <tr key={m.id || m._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{m.product?.name || m.product_name || '-'}</td>
-                      <td className="px-3 py-2">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusColor(m.type)}`}>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                  {recentMovements.slice(0, 5).map((m, i) => (
+                    <tr key={m.id || m._id} className={`${i % 2 === 0 ? 'bg-white dark:bg-transparent' : 'bg-slate-50/50 dark:bg-slate-800/20'} hover:bg-primary-50/50 dark:hover:bg-primary-900/10 transition-colors`}>
+                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300 font-medium">{m.product?.name || m.product_name || '-'}</td>
+                      <td className="px-3 py-2.5">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(m.type)}`}>
                           {getStatusText(m.type)}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{m.quantity}</td>
-                      <td className="px-3 py-2 text-slate-500 text-xs">{formatDate(m.createdAt)}</td>
+                      <td className="px-3 py-2.5 text-slate-700 dark:text-slate-300">{m.quantity}</td>
+                      <td className="px-3 py-2.5 text-slate-500 text-xs">{formatDate(m.createdAt)}</td>
                     </tr>
                   ))}
                 </tbody>
