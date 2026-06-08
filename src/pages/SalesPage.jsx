@@ -242,13 +242,13 @@ export default function SalesPage() {
       </div>
 
       <Modal isOpen={modalOpen} onClose={() => { setModalOpen(false); setEditingId(null) }} title={editingId ? 'Editar Venta' : 'Nueva Venta'} size="full">
-        <form onSubmit={handleCreate} className="flex flex-col lg:flex-row gap-6 h-full">
-          <div className="flex-1 min-w-0">
+        <form onSubmit={handleCreate} className="flex flex-col lg:flex-row h-full">
+          <div className="flex-1 overflow-y-auto min-h-0 pb-3 lg:pb-0 lg:pr-6">
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input type="text" value={productSearch} onChange={(e) => setProductSearch(e.target.value)} placeholder="Buscar producto por nombre o código..." className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 pr-1">
               {filteredProducts.map((product) => (
                 <div key={product.id || product._id} className="group bg-white dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden cursor-pointer" onClick={() => addItem(product)}>
                   <div className={`h-16 bg-gradient-to-br ${getAvatarColor(product.name)} flex items-center justify-center relative`}>
@@ -279,13 +279,13 @@ export default function SalesPage() {
             </div>
           </div>
 
-          <div className="w-full lg:w-80 xl:w-96 flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 pt-4 lg:pt-0 lg:pl-6 flex flex-col gap-4">
+          <div className="lg:w-80 xl:w-96 flex-shrink-0 border-t-2 lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 pt-3 lg:pt-0 lg:pl-6 flex flex-col gap-3 bg-white dark:bg-slate-800">
             <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-semibold text-sm"><ShoppingCart className="h-4 w-4" /> Carrito</div>
 
             {form.items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-slate-400"><ShoppingCart className="h-8 w-8 mb-2" /><p className="text-xs">Carrito vacío</p></div>
+              <div className="flex flex-col items-center justify-center py-6 text-slate-400"><ShoppingCart className="h-8 w-8 mb-2" /><p className="text-xs">Carrito vacío</p></div>
             ) : (
-              <div className="flex-1 space-y-2 overflow-y-auto max-h-[35vh] pr-1">
+              <div className="space-y-2 overflow-y-auto max-h-44 lg:max-h-[30vh] pr-1">
                 {form.items.map((item, i) => (
                   <div key={i} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-2 border border-slate-200 dark:border-slate-700">
                     <div className="flex-1 min-w-0">
@@ -300,7 +300,7 @@ export default function SalesPage() {
               </div>
             )}
 
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-700 space-y-3">
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-700 space-y-3">
               <div className="flex justify-between text-sm"><span className="text-slate-500">Total</span><span className="font-bold text-slate-900 dark:text-slate-50">{formatCurrency(subtotal)}</span></div>
 
               <div>
