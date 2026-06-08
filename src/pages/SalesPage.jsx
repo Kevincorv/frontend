@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Search, Eye, Ban, Receipt, Edit2, Package, Tag, ShoppingCart, DollarSign, CreditCard, Banknote, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getSales, createSale, cancelSale, getSale, updateSale } from '../services/saleService'
@@ -16,7 +16,6 @@ export default function SalesPage() {
   const [filters, setFilters] = useState({ search: '', fecha_desde: '', fecha_hasta: '' })
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const searchRef = useRef()
   const [modalOpen, setModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState({ items: [] })
@@ -25,8 +24,6 @@ export default function SalesPage() {
   const [cancelOpen, setCancelOpen] = useState(false)
   const [cancelTarget, setCancelTarget] = useState(null)
   const [editingId, setEditingId] = useState(null)
-
-  const [searchInput, setSearchInput] = useState('')
 
   const [allProducts, setAllProducts] = useState([])
   const [productSearch, setProductSearch] = useState('')
@@ -45,7 +42,7 @@ export default function SalesPage() {
     setLoading(true)
     try {
       const params = { page, limit: 10 }
-      if (searchInput) params.search = searchInput
+      if (filters.search) params.search = filters.search
       if (filters.fecha_desde) params.fecha_desde = filters.fecha_desde
       if (filters.fecha_hasta) params.fecha_hasta = filters.fecha_hasta
       const data = await getSales(params)
@@ -54,16 +51,9 @@ export default function SalesPage() {
     } catch {
       toast.error('Error al cargar ventas')
     } finally { setLoading(false) }
-  }, [page, searchInput, filters.fecha_desde, filters.fecha_hasta])
+  }, [page, filters.search, filters.fecha_desde, filters.fecha_hasta])
 
   useEffect(() => { loadSales() }, [loadSales])
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value
-    setSearchInput(value)
-    if (searchRef.current) clearTimeout(searchRef.current)
-    searchRef.current = setTimeout(() => setPage(1), 300)
-  }
 
   const openCreate = async () => {
     setEditingId(null)
@@ -229,7 +219,7 @@ export default function SalesPage() {
         <div className="flex items-center gap-3 flex-1 w-full flex-wrap">
           <div className="relative flex-1 min-w-[140px] max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input type="text" value={searchInput} onChange={handleSearchChange} placeholder="Buscar..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
+            <input type="text" value={filters.search} onChange={(e) => { setFilters({...filters, search: e.target.value}); setPage(1) }} placeholder="Buscar..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500" />
           </div>
           <input type="date" value={filters.fecha_desde} onChange={(e) => setFilters({...filters, fecha_desde: e.target.value})} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2" />
           <input type="date" value={filters.fecha_hasta} onChange={(e) => setFilters({...filters, fecha_hasta: e.target.value})} className="text-sm border rounded-lg bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-2" />
