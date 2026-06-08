@@ -85,7 +85,19 @@ function SalesReport() {
       if (filters.startDate) params.fecha_desde = filters.startDate
       if (filters.endDate) params.fecha_hasta = filters.endDate
       const d = await getSalesReport(params)
-      setData(d?.sales || d?.data || d || [])
+      if (Array.isArray(d) && d.length > 0 && d[0].sales) {
+        const allSales = d.flatMap(g => g.sales.map(s => ({
+          ...s,
+          payment_method: s.paymentMethod,
+          user: s.creator,
+          user_name: s.creator?.fullName || '',
+          total: s.totalAmount,
+          comprobante: s.comprobante || `#${s.id}`,
+        })))
+        setData(allSales)
+      } else {
+        setData(d?.sales || d?.data || d || [])
+      }
     } catch { toast.error('Error al cargar reporte') }
     finally { setLoading(false) }
   }
@@ -104,11 +116,11 @@ function SalesReport() {
   }
 
   const columns = [
-    { key: 'comprobante', label: 'Comprobante', render: (r) => r.comprobante || r.numero || `V-${String(r.id).padStart(5, '0')}` },
+    { key: 'comprobante', label: 'Comprobante', render: (r) => r.comprobante || `#${r.id}` },
     { key: 'createdAt', label: 'Fecha', render: (r) => formatDate(r.createdAt) },
-    { key: 'payment_method', label: 'Método', render: (r) => r.payment_method || 'cash' },
+    { key: 'payment_method', label: 'Método', render: (r) => r.payment_method || r.paymentMethod || 'cash' },
     { key: 'total', label: 'Total', render: (r) => <span className="font-semibold">{formatCurrency(r.total || r.totalAmount || 0)}</span> },
-    { key: 'user', label: 'Vendedor', render: (r) => r.user?.name || r.user_name || '-' },
+    { key: 'user', label: 'Vendedor', render: (r) => r.user?.name || r.user?.fullName || r.user_name || '-' },
   ]
 
   return (
@@ -224,15 +236,15 @@ function DailyReport() {
           fecha_desde: start.toISOString().slice(0, 10),
           fecha_hasta: end.toISOString().slice(0, 10),
         })
-        const sales = d?.sales || d?.data || d || []
+        const allSales = Array.isArray(d) && d[0]?.sales ? d.flatMap(g => g.sales) : (d?.sales || d?.data || d || [])
         const dailyMap = {}
-        sales.forEach(s => {
-          const day = new Date(s.createdAt).toISOString().slice(0, 10)
+        allSales.forEach(s => {
+          const day = new Date(s.saleDate || s.createdAt).toISOString().slice(0, 10)
           if (!dailyMap[day]) dailyMap[day] = { date: day, count: 0, total: 0, products: {} }
           dailyMap[day].count++
-          dailyMap[day].total += Number(s.total || s.totalAmount || 0)
-          ;(s.items || []).forEach(item => {
-            const name = item.product_name || item.product?.name || `Producto #${item.productId}`
+          dailyMap[day].total += Number(s.totalAmount || s.total || 0)
+          ;(s.details || s.items || []).forEach(item => {
+            const name = item.product?.name || item.product_name || `Producto #${item.productId}`
             if (!dailyMap[day].products[name]) dailyMap[day].products[name] = { name, quantity: 0, total: 0 }
             dailyMap[day].products[name].quantity += item.quantity || 0
             dailyMap[day].products[name].total += Number(item.subtotal || (item.quantity || 0) * (item.unitPrice || 0))

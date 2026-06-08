@@ -36,6 +36,10 @@ const STATUS_ALIAS = {
   in: 'ingreso',
   out: 'salida',
   adjustment: 'ajuste',
+  income: 'ingreso',
+  expense: 'gasto',
+  sale: 'venta',
+  purchase: 'compra',
 }
 
 function normalizeStatus(status) {

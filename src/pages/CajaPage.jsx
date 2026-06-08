@@ -58,7 +58,7 @@ export default function CajaPage() {
 
   const ingresosHoy = summary?.todaySalesAmount || 0
   const ventasCount = summary?.todaySalesCount || 0
-  const balance = Number(ingresosHoy)
+  const balance = summary?.balance ?? Number(ingresosHoy)
   const todayMovements = summary?.todayMovements || 0
 
   const topProducts = chartData?.topProducts || []
@@ -226,7 +226,15 @@ export default function CajaPage() {
               <span className="text-sm font-semibold text-green-600">{formatCurrency(ingresosHoy)}</span>
             </div>
             <div className="flex justify-between py-2.5 border-b border-slate-200 dark:border-slate-700/50">
-              <span className="text-sm text-slate-500">Balance del día</span>
+              <span className="text-sm text-slate-500">Total Ingresos históricos</span>
+              <span className="text-sm font-semibold text-green-600">{formatCurrency(summary?.totalIncome || 0)}</span>
+            </div>
+            <div className="flex justify-between py-2.5 border-b border-slate-200 dark:border-slate-700/50">
+              <span className="text-sm text-slate-500">Total Egresos históricos</span>
+              <span className="text-sm font-semibold text-red-600">{formatCurrency(summary?.totalExpenses || 0)}</span>
+            </div>
+            <div className="flex justify-between py-2.5 border-b border-slate-200 dark:border-slate-700/50">
+              <span className="text-sm text-slate-500">Balance general</span>
               <span className={`text-sm font-bold ${balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {formatCurrency(balance)}
               </span>

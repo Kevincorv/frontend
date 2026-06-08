@@ -225,7 +225,7 @@ export default function DashboardPage() {
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusColor(m.type)}`}>
                     {getStatusText(m.type)}
                   </span>
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{m.quantity}</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{formatCurrency(m.amount)}</span>
                 </div>
               </div>
             ))}
