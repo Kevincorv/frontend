@@ -8,6 +8,7 @@ import { getSalesReport, downloadSalesExcel } from '../services/reportService'
 import { getChartData } from '../services/dashboardService'
 import { formatCurrency, formatDate, formatNumber } from '../utils/format'
 import DataTable from '../components/DataTable'
+import Pagination from '../components/Pagination'
 import LoadingSpinner from '../components/LoadingSpinner'
 import {
   Chart as ChartJS,
@@ -69,10 +70,12 @@ export default function ReportsPage() {
 function SalesReport() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
   })
+  const pageSize = 20
 
   useEffect(() => {
     loadReport()
@@ -103,6 +106,8 @@ function SalesReport() {
   }
 
   const totalVentas = data.reduce((s, r) => s + Number(r.total || r.totalAmount || 0), 0)
+  const totalPages = Math.max(1, Math.ceil(data.length / pageSize))
+  const paginatedData = data.slice((page - 1) * pageSize, page * pageSize)
 
   const handleExportExcel = async () => {
     try {
@@ -144,15 +149,16 @@ function SalesReport() {
       </div>
 
       <div className="overflow-x-auto">
-        <DataTable columns={columns} data={data} loading={loading}
+        <DataTable columns={columns} data={paginatedData} loading={loading}
           emptyMessage="No hay ventas en el período seleccionado" />
       </div>
 
-      <div className="flex gap-3 mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+      <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <button onClick={handleExportExcel} disabled={data.length === 0}
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50">
           <FileSpreadsheet className="h-4 w-4" /> Exportar Excel
         </button>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   )
@@ -163,7 +169,7 @@ function TrendingReport() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getChartData()
+    getChartData('month')
       .then(setChartData)
       .catch(e => console.error('Trending error:', e))
       .finally(() => setLoading(false))
