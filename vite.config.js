@@ -16,19 +16,24 @@ export default defineConfig({
           },
         ],
       },
+      includeAssets: ['logo.png', 'icons/*.png'],
       manifest: {
         name: 'En lo de Apu',
         short_name: 'En lo de Apu',
         description: 'Sistema de gestión para En lo de Apu',
+        start_url: '/',
+        scope: '/',
         theme_color: '#1e40af',
-        background_color: '#f8fafc',
+        background_color: '#1e40af',
         display: 'standalone',
         orientation: 'portrait-primary',
         lang: 'es-PY',
+        categories: ['business', 'productivity'],
         icons: [
-          { src: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
           { src: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
-        ]
+        ],
+        splash_pages: null
       }
     })
   ],
