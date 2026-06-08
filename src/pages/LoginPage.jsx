@@ -58,8 +58,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative animate-slide-up">
         <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-white/20 dark:border-slate-700/50">
           <div className="flex flex-col items-center mb-8">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-primary-500 to-blue-600 shadow-lg shadow-primary-500/25 mb-5">
-              <img src="/logo.png" alt="Logo" className="h-10 w-10 object-contain" />
+            <div className="mb-5">
+              <img src="/logo.png" alt="Logo" className="h-16 w-16 rounded-full object-cover shadow-lg shadow-primary-500/25" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
               En lo de Apu

@@ -52,8 +52,8 @@ export default function Sidebar() {
       >
         <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-800 dark:to-primary-900">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 overflow-hidden">
-              <img src="/logo.png" alt="Logo" className="h-6 w-6 object-contain" />
+            <div className="flex items-center justify-center w-8 h-8">
+              <img src="/logo.png" alt="Logo" className="h-7 w-7 rounded-full object-cover" />
             </div>
             <span className="text-lg font-bold text-white tracking-wide">
               En lo de Apu
