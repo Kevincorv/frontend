@@ -6,7 +6,7 @@ import { updateProfile, getProfile } from '../services/authService'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 export default function CompanyPage() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -59,6 +59,9 @@ export default function CompanyPage() {
     )
   }
 
+  const fullName = profile?.fullName || user?.fullName || user?.name || 'Usuario'
+  const username = profile?.username || user?.username || ''
+
   return (
     <div className="max-w-lg mx-auto space-y-6 animate-fade-in">
       <div className="card p-6">
@@ -68,9 +71,9 @@ export default function CompanyPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-              {profile?.name || user?.name || 'Usuario'}
+              {fullName}
             </h2>
-            <p className="text-sm text-slate-500">{profile?.email || user?.email || ''}</p>
+            <p className="text-sm text-slate-500">@{username}</p>
           </div>
         </div>
 

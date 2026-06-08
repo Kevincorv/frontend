@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Package, Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Package, User, Lock, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 export default function LoginPage() {
   const { user, login, loading: authLoading } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -21,13 +21,13 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!email || !password) {
+    if (!username || !password) {
       toast.error('Todos los campos son obligatorios')
       return
     }
     setLoading(true)
     try {
-      await login(email, password)
+      await login(username, password)
       toast.success('Inicio de sesión exitoso')
       navigate('/dashboard', { replace: true })
     } catch (err) {
@@ -72,15 +72,15 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Usuario o Correo
+                Usuario
               </label>
               <div className="relative group">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="usuario o correo@ejemplo.com"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="nombre de usuario"
                   className="w-full pl-10 pr-4 py-3 text-sm border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-700/50 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-200"
                 />
               </div>
@@ -120,10 +120,7 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-            ¿No tienes cuenta?{' '}
-            <Link to="/register" className="text-primary-500 hover:text-primary-600 font-semibold hover:underline transition-colors">
-              Registrarse
-            </Link>
+            Sistema de gestión - En lo de Apu
           </p>
         </div>
       </div>

@@ -2,20 +2,13 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Package,
-  Tags,
   Truck,
-  Users,
   ShoppingCart,
   Receipt,
-  Warehouse,
-  UserCog,
-  Building2,
-  BarChart3,
-  Bell,
-  Settings,
-  Activity,
-  X,
   DollarSign,
+  UserCog,
+  BarChart3,
+  X,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useSidebar } from '../contexts/SidebarContext'
@@ -23,19 +16,12 @@ import { useSidebar } from '../contexts/SidebarContext'
 const navigationItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/products', label: 'Productos', icon: Package },
-  { to: '/categories', label: 'Categorías', icon: Tags },
   { to: '/suppliers', label: 'Proveedores', icon: Truck },
-  { to: '/clients', label: 'Clientes', icon: Users },
   { to: '/purchases', label: 'Compras', icon: ShoppingCart },
   { to: '/sales', label: 'Ventas', icon: Receipt },
   { to: '/caja', label: 'Caja', icon: DollarSign },
-  { to: '/inventory', label: 'Inventario', icon: Warehouse },
   { to: '/users', label: 'Usuarios', icon: UserCog, adminOnly: true },
-  { to: '/branches', label: 'Sucursales', icon: Building2, adminOnly: true },
   { to: '/reports', label: 'Reportes', icon: BarChart3 },
-  { to: '/notifications', label: 'Notificaciones', icon: Bell },
-  { to: '/company', label: 'Configuración', icon: Settings },
-  { to: '/activity-logs', label: 'Actividad', icon: Activity },
 ]
 
 export default function Sidebar() {
@@ -113,11 +99,11 @@ export default function Sidebar() {
             <div className="px-3 py-2">
               <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">
-                  {(user?.name || user?.fullName || user?.nombre || 'U').charAt(0).toUpperCase()}
+                  {(user?.fullName || user?.name || user?.nombre || 'U').charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
-                    {user?.name || user?.fullName || user?.nombre || 'Usuario'}
+                    {user?.fullName || user?.name || user?.nombre || 'Usuario'}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">
                     {user?.role || user?.rol || ''}

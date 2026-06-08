@@ -1,12 +1,7 @@
 import api from './api'
 
-export const login = async (email, password) => {
-  const { data } = await api.post('/auth/login', { email, password })
-  return data
-}
-
-export const register = async (formData) => {
-  const { data } = await api.post('/auth/register', formData)
+export const login = async (username, password) => {
+  const { data } = await api.post('/auth/login', { username, password })
   return data
 }
 
@@ -32,5 +27,10 @@ export const createUser = async (formData) => {
 
 export const updateUser = async (id, formData) => {
   const { data } = await api.put(`/users/${id}`, formData)
+  return data
+}
+
+export const deleteUser = async (id) => {
+  const { data } = await api.delete(`/users/${id}`)
   return data
 }

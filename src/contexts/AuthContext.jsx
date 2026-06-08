@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { login as loginService, register as registerService, getProfile, updateProfile as updateProfileService } from '../services/authService'
+import { login as loginService, getProfile, updateProfile as updateProfileService } from '../services/authService'
 
 const AuthContext = createContext()
 
@@ -31,17 +31,12 @@ export function AuthProvider({ children }) {
     loadUser()
   }, [loadUser])
 
-  const login = async (email, password) => {
-    const data = await loginService(email, password)
+  const login = async (username, password) => {
+    const data = await loginService(username, password)
     const { token: newToken, user: userData } = data
     localStorage.setItem('token', newToken)
     setToken(newToken)
     setUser(userData)
-    return data
-  }
-
-  const register = async (formData) => {
-    const data = await registerService(formData)
     return data
   }
 
@@ -59,7 +54,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

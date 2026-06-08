@@ -199,7 +199,7 @@ export default function ProductsPage() {
                     {formatCurrency(product.salePrice)}
                   </span>
                   <span className="text-xs text-slate-400 dark:text-slate-500">
-                    Stock: {product.stock ?? '-'}
+                    {product.unitType === 'pack' ? `${product.unitsPerPack || 1} unid./pack` : 'unidad'}
                   </span>
                 </div>
               </div>
