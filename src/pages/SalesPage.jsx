@@ -33,6 +33,14 @@ export default function SalesPage() {
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [amountReceived, setAmountReceived] = useState('')
 
+  const formatWithDots = (val) => {
+    const digits = val.replace(/\D/g, '')
+    if (!digits) return ''
+    return Number(digits).toLocaleString('es-PY').replace(/,/g, '.')
+  }
+
+  const parseAmount = (str) => Number(str.replace(/\./g, '')) || 0
+
   const loadSales = useCallback(async () => {
     setLoading(true)
     try {
@@ -126,7 +134,8 @@ export default function SalesPage() {
   }
 
   const subtotal = form.items.reduce((sum, item) => sum + (item.quantity || 0) * (item.unitPrice || 0), 0)
-  const change = Math.max(0, (Number(amountReceived) || 0) - subtotal)
+  const amountValue = parseAmount(amountReceived)
+  const change = Math.max(0, amountValue - subtotal)
 
   const filteredProducts = allProducts.filter(p =>
     !productSearch || p.name?.toLowerCase().includes(productSearch.toLowerCase()) || p.code?.toLowerCase().includes(productSearch.toLowerCase())
@@ -135,7 +144,7 @@ export default function SalesPage() {
   const handleCreate = async (e) => {
     e.preventDefault()
     if (form.items.length === 0) { toast.error('Agrega al menos un producto'); return }
-    if (paymentMethod === 'cash' && Number(amountReceived) < subtotal) { toast.error('El monto recibido es menor al total'); return }
+    if (paymentMethod === 'cash' && amountValue < subtotal) { toast.error('El monto recibido es menor al total'); return }
     setSaving(true)
     try {
       const payload = {
@@ -312,15 +321,15 @@ export default function SalesPage() {
               {paymentMethod === 'cash' && (
                 <div>
                   <label className="block text-xs font-medium text-slate-500 mb-1">Monto recibido</label>
-                  <input type="number" step="1000" min="0" value={amountReceived} onChange={(e) => setAmountReceived(e.target.value)} placeholder="0" className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500 text-right font-bold text-lg" />
-                  {Number(amountReceived) > 0 && Number(amountReceived) >= subtotal && (
+                  <input type="text" inputMode="numeric" value={amountReceived} onChange={(e) => setAmountReceived(formatWithDots(e.target.value))} placeholder="0" className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500 text-right font-bold text-lg" />
+                  {amountValue > 0 && amountValue >= subtotal && (
                     <div className="flex justify-between items-center mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800/30">
                       <span className="text-xs font-medium text-green-600 dark:text-green-400">Vuelto</span>
                       <span className="text-sm font-bold text-green-700 dark:text-green-300">{formatCurrency(change)}</span>
                     </div>
                   )}
-                  {Number(amountReceived) > 0 && Number(amountReceived) < subtotal && (
-                    <p className="text-xs text-red-500 mt-1">Faltan {formatCurrency(subtotal - Number(amountReceived))}</p>
+                  {amountValue > 0 && amountValue < subtotal && (
+                    <p className="text-xs text-red-500 mt-1">Faltan {formatCurrency(subtotal - amountValue)}</p>
                   )}
                 </div>
               )}
