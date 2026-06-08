@@ -8,8 +8,8 @@ export const getCajaSummary = async () => {
   return { ...dashboard, ...caja }
 }
 
-export const getCajaChart = async () => {
-  const { data } = await api.get('/dashboard/chart-data')
+export const getCajaChart = async (period = 'month') => {
+  const { data } = await api.get('/dashboard/chart-data', { params: { period } })
   return data
 }
 
