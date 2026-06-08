@@ -185,8 +185,8 @@ function TrendingReport() {
 
   if (loading) return <div className="flex justify-center py-10"><LoadingSpinner size="lg" /></div>
 
-  const salesLabels = chartData?.last7Days?.map((d) => d.date) || []
-  const salesValues = chartData?.last7Days?.map((d) => d.total || 0) || []
+  const salesLabels = chartData?.dailySales?.map((d) => d.date) || []
+  const salesValues = chartData?.dailySales?.map((d) => d.total || 0) || []
 
   const topSoldLabels = chartData?.topProducts?.map((p) => p.name) || []
   const topSoldValues = chartData?.topProducts?.map((p) => p.total || 0) || []

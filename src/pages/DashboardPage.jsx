@@ -218,7 +218,7 @@ export default function DashboardPage() {
             {recentMovements.slice(0, 5).map((m) => (
               <div key={m.id || m._id} className="flex items-center justify-between py-3 gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-slate-700 dark:text-slate-300 truncate">{m.product?.name || m.product_name || '-'}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 truncate">{m.description || m.product?.name || m.product_name || '-'}</p>
                   <p className="text-xs text-slate-500">{formatDate(m.createdAt)}</p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">

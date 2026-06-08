@@ -6,7 +6,7 @@ export const getMovements = async (params = {}) => {
 }
 
 export const createAdjustment = async (formData) => {
-  const { data } = await api.post('/inventory/adjustments', formData)
+  const { data } = await api.post('/inventory/adjustment', formData)
   return data
 }
 

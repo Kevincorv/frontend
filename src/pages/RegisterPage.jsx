@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      await register({ nombre: name, email, password })
+      await register({ name, email, password })
       toast.success('Registro exitoso. Ahora puedes iniciar sesión.')
       navigate('/login')
     } catch (err) {

@@ -68,9 +68,9 @@ export default function CompanyPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-              {profile?.fullName || user?.fullName || 'Usuario'}
+              {profile?.name || user?.name || 'Usuario'}
             </h2>
-            <p className="text-sm text-slate-500">{profile?.username || user?.username || ''}</p>
+            <p className="text-sm text-slate-500">{profile?.email || user?.email || ''}</p>
           </div>
         </div>
 

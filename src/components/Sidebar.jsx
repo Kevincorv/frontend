@@ -113,11 +113,11 @@ export default function Sidebar() {
             <div className="px-3 py-2">
               <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">
-                  {(user?.fullName || user?.nombre || 'U').charAt(0).toUpperCase()}
+                  {(user?.name || user?.fullName || user?.nombre || 'U').charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
-                    {user?.fullName || user?.nombre || 'Usuario'}
+                    {user?.name || user?.fullName || user?.nombre || 'Usuario'}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">
                     {user?.role || user?.rol || ''}

@@ -66,8 +66,8 @@ export default function CajaPage() {
   const topSoldLabels = topProducts.map((p) => p.name) || []
   const topSoldValues = topProducts.map((p) => p.total || 0) || []
 
-  const salesLabels = chartData?.last7Days?.map((d) => d.date) || []
-  const salesValues = chartData?.last7Days?.map((d) => d.total || 0) || []
+  const salesLabels = chartData?.dailySales?.map((d) => d.date) || []
+  const salesValues = chartData?.dailySales?.map((d) => d.total || 0) || []
 
   const granTotal = recentSales.reduce((sum, s) => sum + Number(s.total || s.totalAmount || 0), 0)
 
