@@ -59,7 +59,7 @@ export default function CajaPage() {
   const ingresosHoy = summary?.todaySalesAmount || 0
   const ventasCount = summary?.todaySalesCount || 0
   const balance = summary?.balance ?? Number(ingresosHoy)
-  const todayMovements = summary?.todayMovements || 0
+  const todayMovements = summary?.totalMovements ?? summary?.todayMovements ?? 0
 
   const topProducts = chartData?.topProducts || []
   const starProduct = topProducts[0]
@@ -244,7 +244,7 @@ export default function CajaPage() {
               <span className="text-sm font-semibold">{formatNumber(ventasCount)}</span>
             </div>
             <div className="flex justify-between py-2.5">
-              <span className="text-sm text-slate-500">Movimientos del día</span>
+              <span className="text-sm text-slate-500">Total Movimientos</span>
               <span className="text-sm font-semibold">{formatNumber(todayMovements)}</span>
             </div>
             {starProduct && (
