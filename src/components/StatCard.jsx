@@ -67,11 +67,11 @@ export default function StatCard({ title, value, icon: Icon, color = 'primary', 
   return (
     <div className="group bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-3 sm:p-4 lg:p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex items-start justify-between gap-2">
-        <div className="space-y-1 sm:space-y-2 min-w-0">
+        <div className="space-y-1 sm:space-y-2 min-w-0 overflow-hidden">
           <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
             {title}
           </p>
-          <p className="text-base sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+          <p className="text-sm sm:text-lg lg:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight break-words">
             {displayValue}
           </p>
           {subtitle && (
