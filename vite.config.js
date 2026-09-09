@@ -11,7 +11,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         runtimeCaching: [
           {
-            urlPattern: /^https?:\/\/backend-production-1fae9\.up\.railway\.app\/api\/.*/i,
+            urlPattern: /^https?:\/\/.*\/api\/.*/i,
             handler: 'NetworkOnly',
           },
         ],
@@ -43,10 +43,6 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5001',
         changeOrigin: true
-      },
-      '/socket.io': {
-        target: 'http://localhost:5001',
-        ws: true
       }
     }
   }
