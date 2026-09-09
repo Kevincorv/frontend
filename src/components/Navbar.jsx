@@ -32,7 +32,7 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
 
-  const currentTitle = pageTitles[location.pathname] || 'En lo de Apu'
+  const currentTitle = pageTitles[location.pathname] || 'Sistema de Gestión de Stock'
 
   return (
     <header className="h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 shadow-sm">

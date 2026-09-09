@@ -62,7 +62,7 @@ export default function LoginPage() {
               <img src="/logo.png" alt="Logo" className="h-16 w-16 rounded-full object-cover shadow-lg shadow-primary-500/25" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-              En lo de Apu
+              Sistema de Gestión de Stock
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
               Inicia sesión para continuar
@@ -120,7 +120,7 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-            Sistema de gestión - En lo de Apu
+            Sistema de gestión de stock e inventario
           </p>
         </div>
       </div>

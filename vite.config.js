@@ -18,9 +18,9 @@ export default defineConfig({
       },
       includeAssets: ['logo.png', 'icons/*.png'],
       manifest: {
-        name: 'En lo de Apu',
-        short_name: 'En lo de Apu',
-        description: 'Sistema de gestión para En lo de Apu',
+        name: 'Sistema de Gestión de Stock',
+        short_name: 'Gestión Stock',
+        description: 'Sistema de gestión de stock y inventario',
         start_url: '/',
         scope: '/',
         theme_color: '#1e40af',

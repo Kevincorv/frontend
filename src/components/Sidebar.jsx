@@ -56,7 +56,7 @@ export default function Sidebar() {
               <img src="/logo.png" alt="Logo" className="h-7 w-7 rounded-full object-cover" />
             </div>
             <span className="text-lg font-bold text-white tracking-wide">
-              En lo de Apu
+              Gestión Stock
             </span>
           </div>
           <button
