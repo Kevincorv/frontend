@@ -561,7 +561,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 text-xs text-slate-500">
                 <Globe className="h-3.5 w-3.5" />
-                Hecho en Paraguay
+                Hecho por <a href="https://www.krctechnologiess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">KRC Technologies</a>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-500">
                 <Headphones className="h-3.5 w-3.5" />
