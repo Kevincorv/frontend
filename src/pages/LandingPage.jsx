@@ -161,8 +161,8 @@ function AnimatedCounter({ target, suffix, duration = 2000 }) {
   useEffect(() => {
     if (!started) return
     const isFloat = !Number.isInteger(target)
-    const steps = 60
-    const increment = target / steps
+    const totalTicks = 60
+    const increment = target / totalTicks
     let current = 0
     const timer = setInterval(() => {
       current += increment
