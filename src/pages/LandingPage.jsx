@@ -93,6 +93,13 @@ const highlights = [
   },
 ]
 
+const steps = [
+  { step: '1', title: 'Cargá tus productos', description: 'Agregá tu catálogo completo con precios y código.' },
+  { step: '2', title: 'Registrá compras', description: 'Cargá las compras a proveedores para actualizar el stock.' },
+  { step: '3', title: 'Efectuá ventas', description: 'Vendé rápido con interfaz intuitiva y comprobantes.' },
+  { step: '4', title: 'Revisá reportes', description: 'Analizá el rendimiento de tu negocio con gráficos y reportes.' },
+]
+
 const testimonials = [
   {
     name: 'María González',
