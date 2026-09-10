@@ -179,7 +179,7 @@ function AnimatedCounter({ target, suffix, duration = 2000 }) {
       } else {
         setCount(isFloat ? parseFloat(current.toFixed(1)) : Math.floor(current))
       }
-    }, duration / steps)
+    }, duration / totalTicks)
     return () => clearInterval(timer)
   }, [started, target, duration])
 
