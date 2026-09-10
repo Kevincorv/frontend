@@ -6,6 +6,7 @@ import { SidebarProvider } from './contexts/SidebarContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
+import LandingPage from './pages/LandingPage'
 import DashboardPage from './pages/DashboardPage'
 import ProductsPage from './pages/ProductsPage'
 import SuppliersPage from './pages/SuppliersPage'
@@ -34,6 +35,7 @@ export default function App() {
               }}
             />
             <Routes>
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
 
               <Route
@@ -60,8 +62,7 @@ export default function App() {
                 <Route path="/reports" element={<ReportsPage />} />
               </Route>
 
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </SidebarProvider>
         </ThemeProvider>

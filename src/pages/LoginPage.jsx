@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Package, User, Lock, Eye, EyeOff } from 'lucide-react'
+import { Package, User, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -56,6 +56,13 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-md relative animate-slide-up">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white mb-6 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Volver al inicio
+        </Link>
         <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-white/20 dark:border-slate-700/50">
           <div className="flex flex-col items-center mb-8">
             <div className="mb-5">
